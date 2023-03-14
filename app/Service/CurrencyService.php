@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\DTO\Currency\CreateCurrencyRequestData;
+use App\DTO\Currency\UpdateCurrencyRequestData;
+use App\Http\Resources\CurrencyResource;
 use App\Models\Currency;
 use Illuminate\Support\Facades\Http;
 
@@ -33,5 +35,12 @@ class CurrencyService
         $currency = Currency::query()->create($data->toArray());
 
         return $currency;
+    }
+
+    public function patch(UpdateCurrencyRequestData $data, Currency $currency): Currency
+    {
+        $currency->update($data->toArray());
+
+        return $currency->fresh();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Currency\CreateCurrencyRequestData;
+use App\DTO\Currency\UpdateCurrencyRequestData;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Http\Resources\CurrencyCollection;
@@ -42,11 +43,10 @@ class CurrencyController extends ApiController
         UpdateCurrencyRequest $request,
         Currency $currency
     ): CurrencyResource {
-        $currency->update($request->validated());
+        $dto = UpdateCurrencyRequestData::fromArray($request->validated());
+        $currency = $this->service->patch($dto, $currency);
 
-        return new CurrencyResource(
-            $currency->fresh()
-        );
+        return new CurrencyResource($currency);
     }
 
     public function destroy(Currency $currency): JsonResponse

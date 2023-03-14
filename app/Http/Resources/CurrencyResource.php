@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CurrencyResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -17,10 +18,10 @@ class CurrencyResource extends JsonResource
         $currency = $this->resource;
 
         return [
-            'id' => $currency->id,
-            'name' => $currency->name,
+            'id'            => $currency->id,
+            'name'          => $currency->name,
             'currency_code' => $currency->currency_code,
-            'exchange_rate' => $currency->exchange_rate
+            'exchange_rate' => $currency->exchange_rate,
         ];
     }
 }
