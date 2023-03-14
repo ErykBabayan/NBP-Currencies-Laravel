@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\Currency\CreateCurrencyRequestData;
 use App\Models\Currency;
 use Illuminate\Support\Facades\Http;
 
@@ -24,5 +25,13 @@ class CurrencyService
                 'exchange_rate' => $currency['mid'] * 100
             ]);
         }
+    }
+
+    public function store(CreateCurrencyRequestData $data): Currency
+    {
+        /** @var Currency $currency */
+        $currency = Currency::query()->create($data->toArray());
+
+        return $currency;
     }
 }

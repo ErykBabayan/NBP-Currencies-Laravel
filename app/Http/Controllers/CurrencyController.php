@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Currency\CreateCurrencyRequestData;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Http\Resources\CurrencyCollection;
 use App\Http\Resources\CurrencyResource;
 use App\Models\Currency;
+use App\Service\CurrencyService;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class CurrencyController extends ApiController
 {
+    public function __construct(
+        public CurrencyService $service,
+    ) {
+    }
+
     public function index(): CurrencyCollection
     {
         return new CurrencyCollection(
@@ -26,7 +32,10 @@ class CurrencyController extends ApiController
 
     public function create(StoreCurrencyRequest $request): CurrencyResource
     {
-        return new CurrencyResource(Currency::query()->create([$request->validated()]));
+        $dto = CreateCurrencyRequestData::fromArray($request->validated());
+        $currency = $this->service->store($dto);
+
+        return new CurrencyResource($currency);
     }
 
     public function update(
