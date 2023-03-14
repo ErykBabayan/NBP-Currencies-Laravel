@@ -4,40 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
+use App\Http\Resources\CurrencyCollection;
+use App\Http\Resources\CurrencyResource;
 use App\Models\Currency;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class CurrencyController extends ApiController
 {
-    public function index(): JsonResponse
+    public function index(): CurrencyCollection
     {
-        return new JsonResponse(
-            data: Currency::query()->paginate(10)
+        return new CurrencyCollection(
+            Currency::query()->paginate(10)
         );
     }
 
-    public function show(Currency $currency): JsonResponse
+    public function show(Currency $currency): CurrencyResource
     {
-        return new JsonResponse(
-            data: $currency
-        );
+        return new CurrencyResource($currency);
     }
 
-    public function create(StoreCurrencyRequest $request): JsonResponse
+    public function create(StoreCurrencyRequest $request): CurrencyResource
     {
-        return new JsonResponse(
-            data: Currency::query()->create([$request->validated()]),
-            status: Response::HTTP_CREATED
-        );
+        return new CurrencyResource(Currency::query()->create([$request->validated()]));
     }
 
-    public function update(UpdateCurrencyRequest $request, Currency $currency): JsonResponse
-    {
+    public function update(
+        UpdateCurrencyRequest $request,
+        Currency $currency
+    ): CurrencyResource {
         $currency->update($request->validated());
 
-        return new JsonResponse(
-            data: $currency->fresh()
+        return new CurrencyResource(
+            $currency->fresh()
         );
     }
 
@@ -46,7 +45,4 @@ class CurrencyController extends ApiController
         $currency->delete();
         return new JsonResponse();
     }
-
-
-
 }
